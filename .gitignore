@@ -1,0 +1,14 @@
+node_modules/
+target/
+.m2/
+.npm-cache/
+dist/
+.env
+.env.*
+!.env.example
+.idea/
+.vscode/
+*.log
+*.dump
+/teamflow-demo-data.sql
+.DS_Store

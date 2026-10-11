@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: teamflow-api
+    runtime: docker
+    rootDir: backend
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: FRONTEND_ORIGIN
+        fromService:
+          name: teamflow-web
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: COOKIE_SECURE
+        value: "true"
+  - type: web
+    name: teamflow-web
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          name: teamflow-api
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
